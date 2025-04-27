@@ -19,6 +19,11 @@ export default function Root() {
                 Dashboard
               </Link>
             </li>
+            <li>
+              <Link to="/doctors" className={isActive("/doctors")}>
+                Doctors
+              </Link>
+            </li>
           </ul>
         </aside>
 
