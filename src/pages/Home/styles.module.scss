@@ -1,0 +1,16 @@
+.home_page {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 2rem;
+
+  h1 {
+    color: #333;
+    margin-bottom: 1.5rem;
+
+    &:hover {
+      color: #646cff;
+    }
+  }
+}
