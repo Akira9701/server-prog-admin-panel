@@ -3,6 +3,8 @@ import Root from "./root";
 import ErrorPage from "@/pages/Error";
 import Home from "@/pages/Home";
 
+// Import dummy page components for navigation examples
+
 const router = createBrowserRouter([
   {
     path: "/",
@@ -13,7 +15,6 @@ const router = createBrowserRouter([
         index: true,
         element: <Home />,
       },
-      // Add more routes here as needed
     ],
   },
 ]);
