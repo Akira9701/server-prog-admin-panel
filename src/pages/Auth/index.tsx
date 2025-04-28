@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-import TextInput from "@/shared/Components/TextInput/index";
-import PasswordInput from "@/shared/Components/PasswordInput/index";
-import Button from "@/shared/Components/Button/index";
+import TextInput from "@/shared/components/textInput/index";
+import PasswordInput from "@/shared/components/passwordInput/index";
+import Button from "@/shared/components/button/index";
 import styles from "./styles.module.scss";
 import { Link } from "react-router-dom";
 
@@ -42,8 +42,7 @@ const Auth = () => {
   };
 
   const handleBlur = (e: React.FocusEvent<HTMLInputElement>) => {
-    const { name, value, type, checked } = e.target;
-    const fieldValue = type === "checkbox" ? checked : value;
+    const { name, value } = e.target;
 
     setTouched((prev) => ({
       ...prev,
@@ -61,15 +60,26 @@ const Auth = () => {
     e.preventDefault();
     const validationErrors: { [key: string]: string } = {};
     
+    // Mark all fields as touched
+    const touchedFields = Object.keys(form).reduce((acc, field) => ({
+      ...acc,
+      [field]: true
+    }), {});
+    setTouched(touchedFields);
+
+    // Validate all fields
     Object.entries(form).forEach(([name, value]) => {
-      const error = validateField(name, String(value));
-      if (error) {
-        validationErrors[name] = error;
+      if (name === 'email' || name === 'password') {
+        const error = validateField(name, String(value));
+        if (error) {
+          validationErrors[name] = error;
+        }
       }
     });
 
     setErrors(validationErrors);
     if (Object.keys(validationErrors).length === 0) {
+      console.log("Form submitted successfully");
     }
   };
 
@@ -77,13 +87,13 @@ const Auth = () => {
     <div className={styles.container}>
       <div className={styles.header}>
       <div className={styles.logo}>
-          <img src="/src/shared/Logo/Dark.svg" alt="Logo" />
+          <img src="/src/shared/assets/logo/Dark.svg" alt="Logo" />
         </div>
         <div className={styles.title}>
           Пожалуйста, введите ваши данные для входа
         </div>
       </div>
-      <form>
+      <form onSubmit={handleSubmit}>
         <div className={styles.formGroup}>
           <label className={styles.formLabel}>Адрес электронной почты</label>
           <div>

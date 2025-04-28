@@ -1,9 +1,9 @@
 import React, { useState } from "react";
-import TextInput from "@/shared/Components/TextInput/index";
-import PasswordInput from "@/shared/Components/PasswordInput/index";
-import Button from "@/shared/Components/Button/index";
+import TextInput from "@/shared/components/textInput/index";
+import PasswordInput from "@/shared/components/passwordInput/index";
+import Button from "@/shared/components/button/index";
 import styles from "./styles.module.scss";
-import Switcher from "@/shared/Components/Switcher/index";
+import Switcher from "@/shared/components/switcher/index";
 import { Link } from "react-router-dom";
 
 
@@ -74,6 +74,7 @@ const Register = () => {
     e.preventDefault();
     const validationErrors: { [key: string]: string } = {};
     
+    // Validate all fields and collect errors
     Object.entries(form).forEach(([name, value]) => {
       const error = validateField(name, String(value));
       if (error) {
@@ -81,8 +82,22 @@ const Register = () => {
       }
     });
 
+    // Set all fields as touched to show errors
+    const touchedFields = Object.keys(form).reduce((acc, field) => ({
+      ...acc,
+      [field]: true
+    }), {});
+    setTouched(touchedFields);
+
+    // Update errors state
     setErrors(validationErrors);
+
+    // Only proceed if there are no validation errors
     if (Object.keys(validationErrors).length === 0) {
+      console.log("Form submitted successfully");
+      // Here you can add API call to register user
+    } else {
+      console.log("Form has validation errors");
     }
   };
 
@@ -90,7 +105,7 @@ const Register = () => {
     <div className={styles.container}>
       <div className={styles.header}>
         <div className={styles.logo}>
-          <img src="/src/shared/Logo/Dark.svg" alt="Logo" />
+          <img src="/src/shared/assets/logo/Dark.svg" alt="Logo" />
         </div>
         <div className={styles.title}>
           Пожалуйста, введите ваши данные для регистрации

@@ -13,7 +13,7 @@ const Switcher: React.FC<SwitcherProps> = ({ name, checked, onChange }) => (
     onChange={val => {
       onChange({
         target: { name, checked: val, type: 'checkbox', value: '' }
-      } as any);
+      } as React.ChangeEvent<HTMLInputElement>);
     }}
   />
 );
