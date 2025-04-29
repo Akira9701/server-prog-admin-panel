@@ -1,0 +1,73 @@
+.loginContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background-color: #f9fafb;
+  padding: 1rem;
+}
+
+.loginCard {
+  max-width: 430px;
+  width: 100%;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+}
+
+.logoContainer {
+  display: flex;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.logoIcon {
+  width: 36px;
+  height: 36px;
+  background-color: #1a56db;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 0.5rem;
+
+  span {
+    color: white;
+    font-weight: bold;
+    font-size: 18px;
+  }
+}
+
+.logoText {
+  margin: 0 !important;
+  color: #1a56db;
+}
+
+.loginForm {
+  margin-top: 2rem;
+  width: 100%;
+}
+
+.loginButton {
+  width: 100%;
+  margin-top: 0.5rem;
+  background-color: #1a56db;
+  border-color: #1a56db;
+
+  &:hover {
+    background-color: #1e429f;
+    border-color: #1e429f;
+  }
+}
+
+.registerButton {
+  width: 100%;
+
+  &:hover {
+    border-color: #1a56db;
+    color: #1a56db;
+  }
+}
+
+.inputIcon {
+  color: #9ca3af;
+}

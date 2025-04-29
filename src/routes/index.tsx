@@ -5,6 +5,8 @@ import Home from "@/pages/Home";
 import Doctors from "@/pages/Doctors";
 import Register from "@/pages/Register";
 import Auth from "@/pages/Auth";
+import DoctorProfile from "../pages/DoctorProfile";
+import Login from "../pages/Login";
 // Import dummy page components for navigation examples
 
 const router = createBrowserRouter([
@@ -31,7 +33,15 @@ const router = createBrowserRouter([
         path: "/doctors",
         element: <Doctors />,
       },
+      {
+        path: "profile/:id",
+        element: <DoctorProfile />,
+      },
     ],
+  },
+  {
+    path: "/login",
+    element: <Login />,
   },
 ]);
 
