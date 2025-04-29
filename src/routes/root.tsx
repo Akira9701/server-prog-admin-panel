@@ -1,36 +1,126 @@
-import { Link, Outlet, useLocation } from "react-router-dom";
+import { Link, Outlet, useLocation, useNavigate } from "react-router-dom";
+import { Layout, Menu, Dropdown, Typography } from "antd";
+import type { MenuProps } from "antd";
+import {
+  DashboardOutlined,
+  CalendarOutlined,
+  UserOutlined,
+  TeamOutlined,
+  FileTextOutlined,
+  SettingOutlined,
+  LogoutOutlined,
+  DownOutlined,
+} from "@ant-design/icons";
+import { useSelector, useDispatch } from "react-redux";
+import { logoutSuccess } from "../store/slices/authSlice";
+import { RootState } from "../store";
 import styles from "./styles.module.scss";
+
+const { Sider, Content } = Layout;
+const { Text } = Typography;
 
 export default function Root() {
   const location = useLocation();
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
 
-  const isActive = (path: string) => {
-    return location.pathname === path ? styles.active : "";
+  const currentUser = useSelector((state: RootState) => state.user.currentUser);
+
+  const handleLogout = () => {
+    dispatch(logoutSuccess());
+    navigate("/login");
   };
 
-  return (
-    <div className={styles.root_layout}>
-      <div className={styles.content_wrapper}>
-        <aside className={styles.sidebar}>
-          <h1>Navigation</h1>
-          <ul className={styles.menu}>
-            <li>
-              <Link to="/" className={isActive("/")}>
-                Dashboard
-              </Link>
-            </li>
-            <li>
-              <Link to="/doctors" className={isActive("/doctors")}>
-                Doctors
-              </Link>
-            </li>
-          </ul>
-        </aside>
+  const dropdownItems: MenuProps["items"] = [
+    {
+      key: "profile",
+      icon: <UserOutlined />,
+      label: "Profile",
+      onClick: () => navigate(`/profile/${currentUser?.id}`),
+    },
+    {
+      key: "divider",
+      type: "divider",
+    },
+    {
+      key: "logout",
+      icon: <LogoutOutlined />,
+      label: "Logout",
+      onClick: handleLogout,
+    },
+  ];
 
-        <main className={styles.main_content}>
-          <Outlet />
-        </main>
-      </div>
-    </div>
+  const menuItems = [
+    {
+      key: "/",
+      icon: <DashboardOutlined />,
+      label: <Link to="/">Dashboard</Link>,
+    },
+    {
+      key: "/appointment",
+      icon: <CalendarOutlined />,
+      label: <Link to="/appointment">Appointment</Link>,
+    },
+    {
+      key: "/doctors",
+      icon: <UserOutlined />,
+      label: <Link to="/doctors">Doctor</Link>,
+    },
+    {
+      key: "/patients",
+      icon: <TeamOutlined />,
+      label: <Link to="/patients">Patient</Link>,
+    },
+    {
+      key: "/reports",
+      icon: <FileTextOutlined />,
+      label: <Link to="/reports">Report</Link>,
+    },
+    {
+      key: "/settings",
+      icon: <SettingOutlined />,
+      label: <Link to="/settings">Setting</Link>,
+    },
+  ];
+
+  return (
+    <Layout style={{ minHeight: "100vh" }}>
+      <Sider width={240} theme="light" className={styles.sidebar}>
+        <div className={styles.sidebarInner}>
+          <div className={styles.logo}>
+            <div className={styles.logoIcon}>
+              <span>+</span>
+            </div>
+            <Text strong style={{ color: "#1a56db", fontSize: "20px" }}>
+              Happycare
+            </Text>
+          </div>
+
+          <Menu
+            mode="vertical"
+            selectedKeys={[location.pathname]}
+            items={menuItems}
+            className={styles.sideMenu}
+          />
+
+          <div className={styles.userProfile}>
+            <div className={styles.userInfo}>
+              <Text strong>{currentUser?.name}</Text>
+              <br />
+              <Text type="secondary" style={{ fontSize: "12px" }}>
+                Doctor
+              </Text>
+            </div>
+            <Dropdown menu={{ items: dropdownItems }} placement="topRight">
+              <DownOutlined style={{ fontSize: "10px", color: "#6b7280" }} />
+            </Dropdown>
+          </div>
+        </div>
+      </Sider>
+
+      <Content className={styles.main_content}>
+        <Outlet />
+      </Content>
+    </Layout>
   );
 }
