@@ -1,19 +1,44 @@
 .home_page {
-  text-align: center;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 0;
-  max-width: 800px;
-  margin: 0 auto;
   width: 100%;
+  padding: 20px;
+}
 
-  h1 {
-    color: #333;
-    margin-bottom: 1.5rem;
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
 
-    &:hover {
-      color: #646cff;
-    }
+  h3 {
+    margin: 0;
   }
+}
+
+.date {
+  color: #6b7280;
+  font-size: 14px;
+}
+
+.statsRow {
+  margin-bottom: 24px;
+}
+
+.statCard {
+  border-radius: 16px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  transition: transform 0.2s;
+
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  }
+}
+
+.widgets {
+  width: 100%;
+}
+
+.activityCard {
+  border-radius: 16px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
 }
