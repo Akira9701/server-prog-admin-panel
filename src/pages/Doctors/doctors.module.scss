@@ -1,77 +1,65 @@
 .container {
-  background: #fff;
-  border-radius: 10px;
-  padding: 24px;
-  margin: 24px 0;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.03);
-}
-
-.title {
-  font-size: 22px;
-  font-weight: 600;
-  margin-bottom: 18px;
-  color: #333;
-}
-
-.table {
+  padding: 20px;
   width: 100%;
-  border-collapse: collapse;
-  background: #fff;
 }
 
-.table th, .table td {
-  padding: 16px 12px;
-  text-align: left;
-  font-size: 16px;
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
 }
 
-.table th {
-  color: #bdbdbd;
-  font-weight: 500;
-  background: #fafbfc;
-}
+.doctorsTable {
+  background-color: white;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
 
-.table tr:not(:last-child) {
-  border-bottom: 1px solid #f0f0f0;
+  :global {
+    .ant-table {
+      background: transparent;
+    }
+
+    .ant-table-thead > tr > th {
+      background: white;
+      color: #6b7280;
+      font-weight: 500;
+      font-size: 14px;
+      padding: 16px;
+      border-bottom: 1px solid #f3f4f6;
+    }
+
+    .ant-table-tbody > tr > td {
+      padding: 16px;
+      border-bottom: 1px solid #f3f4f6;
+    }
+
+    .ant-table-tbody > tr:hover > td {
+      background: #f9fafb;
+    }
+
+    .ant-pagination {
+      margin: 16px;
+    }
+  }
 }
 
 .nameCell {
   display: flex;
   align-items: center;
-  gap: 12px;
-}
-
-.avatar {
-  width: 32px;
-  height: 32px;
-  border-radius: 8px;
-  display: inline-block;
-  background: #e3efff;
 }
 
 .name {
-  font-weight: 600;
-  color: #222;
+  font-weight: 500;
 }
 
-.actions {
-  display: flex;
-  gap: 12px;
-}
-
-.iconBtn {
-  background: none;
-  border: none;
-  padding: 4px;
-  cursor: pointer;
-  transition: background 0.2s;
+.actionButton {
+  padding: 8px;
   border-radius: 8px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
 
-.iconBtn:hover {
-  background: #f0f0f0;
-  opacity: 1;
+  &:hover {
+    background-color: #f3f4f6;
+    color: #1a56db;
+  }
 }

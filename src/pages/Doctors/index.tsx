@@ -1,42 +1,73 @@
+import { useSelector } from "react-redux";
+import { Table, Typography, Avatar, Space, Button } from "antd";
+import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
+import { RootState } from "../../store";
+import { Doctor } from "../../types/user.types";
 import styles from "./doctors.module.scss";
-import { doctors } from "../../shared/mocks/doctors.mocks";
-import { ReactComponent as EditIcon } from "../../shared/assets/icons/edit.svg";
-import { ReactComponent as DeleteIcon } from "../../shared/assets/icons/delete.svg";
+
+const { Title } = Typography;
 
 const Doctors = () => {
+  const { doctors } = useSelector((state: RootState) => state.doctors);
+
+  const columns = [
+    {
+      title: "Name",
+      dataIndex: "name",
+      key: "name",
+      render: (text: string, record: Doctor) => (
+        <div className={styles.nameCell}>
+          <Avatar
+            style={{ background: record.avatar, marginRight: 12 }}
+            size="default"
+          />
+          <span className={styles.name}>{text}</span>
+        </div>
+      ),
+    },
+    {
+      title: "Experience",
+      dataIndex: "experience",
+      key: "experience",
+    },
+    {
+      title: "Specialty",
+      dataIndex: "profile",
+      key: "specialty",
+    },
+    {
+      title: "",
+      key: "actions",
+      render: () => (
+        <Space>
+          <Button
+            type="text"
+            icon={<EditOutlined />}
+            className={styles.actionButton}
+          />
+          <Button
+            type="text"
+            icon={<DeleteOutlined />}
+            className={styles.actionButton}
+          />
+        </Space>
+      ),
+    },
+  ];
+
   return (
     <div className={styles.container}>
-      <h1 className={styles.title}>Список врачей</h1>
-      <table className={styles.table}>
-        <thead>
-          <tr>
-            <th><h2 className={styles.th}>Имя врача</h2></th>
-            <th><h2 className={styles.th}>Опыт</h2></th>
-            <th><h2 className={styles.th}>Специальность</h2></th>
-            <th></th>
-          </tr>
-        </thead>
-        <tbody>
-          {doctors.map((doc) => (
-            <tr key={doc.name}>
-              <td className={styles.nameCell}>
-                <span className={styles.avatar} style={{background: doc.avatar}} />
-                <p className={styles.name}>{doc.name}</p>
-              </td>
-              <td><p>{doc.experience}</p></td>
-              <td><p>{doc.profile}</p></td>
-              <td className={styles.actions}>
-                <button className={styles.iconBtn}>
-                  <EditIcon width={18} height={18} />
-                </button>
-                <button className={styles.iconBtn}>
-                  <DeleteIcon width={18} height={18} />
-                </button>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+      <div className={styles.header}>
+        <Title level={3}>Doctors</Title>
+        <Button type="primary">Add Doctor</Button>
+      </div>
+      <Table
+        dataSource={doctors}
+        columns={columns}
+        rowKey="id"
+        pagination={{ pageSize: 10 }}
+        className={styles.doctorsTable}
+      />
     </div>
   );
 };
