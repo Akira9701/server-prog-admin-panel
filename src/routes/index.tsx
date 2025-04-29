@@ -6,6 +6,7 @@ import Doctors from "@/pages/Doctors";
 import Register from "@/pages/Register";
 import Auth from "@/pages/Auth";
 import DoctorProfile from "../pages/DoctorProfile";
+import ClinicProfile from "../pages/ClinicProfile";
 import Login from "../pages/Login";
 // Import dummy page components for navigation examples
 
@@ -34,8 +35,12 @@ const router = createBrowserRouter([
         element: <Doctors />,
       },
       {
-        path: "profile/:id",
+        path: "profileDoctor/:id",
         element: <DoctorProfile />,
+      },
+      {
+        path: "profileClinic/:id",
+        element: <ClinicProfile />,
       },
     ],
   },

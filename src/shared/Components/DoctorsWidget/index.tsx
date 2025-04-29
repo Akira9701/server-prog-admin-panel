@@ -24,7 +24,7 @@ export const DoctorsWidget: FC = () => {
       render: (text: string, record: Doctor) => (
         <div className={styles.nameCell}>
           <Avatar
-            style={{ background: record.avatar, marginRight: 12 }}
+            style={{ background: record.avatarUrl, marginRight: 12 }}
             size="small"
           />
           <Text strong>{text}</Text>
@@ -32,14 +32,14 @@ export const DoctorsWidget: FC = () => {
       ),
     },
     {
-      title: "Experience",
-      dataIndex: "experience",
-      key: "experience",
+      title: "qualification",
+      dataIndex: "qualification",
+      key: "qualification",
     },
     {
-      title: "Specialty",
-      dataIndex: "profile",
-      key: "profile",
+      title: "qualification",
+      dataIndex: "specialization",
+      key: "specialization",
     },
     {
       title: "",

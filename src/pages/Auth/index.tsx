@@ -4,8 +4,15 @@ import PasswordInput from "@/shared/components/passwordInput/index";
 import Button from "@/shared/components/button/index";
 import styles from "./styles.module.scss";
 import { Link } from "react-router-dom";
+import { clinics } from "@/shared/mocks/clinic.mocks";
+import { doctors } from "@/shared/mocks/doctors.mocks";
+import { loginSuccess } from "@/store/slices/authSlice";
+import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 const Auth = () => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
   const [form, setForm] = useState({
     email: "",
     password: "",
@@ -60,14 +67,12 @@ const Auth = () => {
     e.preventDefault();
     const validationErrors: { [key: string]: string } = {};
     
-    // Mark all fields as touched
     const touchedFields = Object.keys(form).reduce((acc, field) => ({
       ...acc,
       [field]: true
     }), {});
     setTouched(touchedFields);
 
-    // Validate all fields
     Object.entries(form).forEach(([name, value]) => {
       if (name === 'email' || name === 'password') {
         const error = validateField(name, String(value));
@@ -79,7 +84,25 @@ const Auth = () => {
 
     setErrors(validationErrors);
     if (Object.keys(validationErrors).length === 0) {
-      console.log("Form submitted successfully");
+      try {
+        const ThisClinics = clinics.find(u => u.email === form.email && u.password === form.password);
+        const ThisDoctor = doctors.find(u => u.email === form.email && u.password === form.password);
+        const user = ThisClinics || ThisDoctor;
+        if (user) {
+          dispatch(loginSuccess({ user, token: "mock-token" }));
+          navigate('/');
+        } else {
+          setErrors({
+            email: 'Неверный email или пароль',
+            password: 'Неверный email или пароль'
+          });
+        }
+      } catch {
+        setErrors({
+          email: 'Произошла ошибка при входе',
+          password: 'Произошла ошибка при входе'
+        });
+      }
     }
   };
 

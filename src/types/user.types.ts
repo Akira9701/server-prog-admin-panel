@@ -1,31 +1,38 @@
 export interface User {
   id: string;
-  name: string;
+  name?: string;
+  firstName?: string;
+  lastName?: string;
   email: string;
-  role: "doctor" | "patient" | "admin";
-  avatar?: string;
+  password: string;
+  role: "doctor" | "clinic"; //хз нужно ли
   createdAt: string;
-  updatedAt: string;
 }
 
 export interface Doctor extends User {
+  firstName: string;
+  lastName: string;
   role: "doctor";
   specialization: string;
-  experience: string;
-  profile: string;
+  qualification: string;
+  bio: string;
+  avatarUrl?: string;
   rating: number;
   totalPatients: number;
   totalAppointments: number;
 }
 
-export interface Patient extends User {
-  role: "patient";
-  age?: number;
-  gender?: "male" | "female" | "other";
-  bloodGroup?: string;
-  address?: string;
-  phone?: string;
+export interface Clinic extends User {
+  name: string;
+  role: "clinic";
+  description: string;
+  phone: string;
+  address: string;
+  logoUrl: string;
+  workingHours: string;
+  updatedAt: string;
 }
+
 
 export interface Appointment {
   id: string;
@@ -54,9 +61,12 @@ export interface LoginCredentials {
   password: string;
 }
 
+
 export interface AuthState {
   user: User | null;
   token: string | null;
   loading: boolean;
   error: string | null;
 }
+
+

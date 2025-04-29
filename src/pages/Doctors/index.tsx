@@ -18,7 +18,7 @@ const Doctors = () => {
       render: (text: string, record: Doctor) => (
         <div className={styles.nameCell}>
           <Avatar
-            style={{ background: record.avatar, marginRight: 12 }}
+            style={{ background: record.avatarUrl, marginRight: 12 }}
             size="default"
           />
           <span className={styles.name}>{text}</span>
@@ -27,13 +27,13 @@ const Doctors = () => {
     },
     {
       title: "Experience",
-      dataIndex: "experience",
-      key: "experience",
+      dataIndex: "qualification",
+      key: "qualification",
     },
     {
       title: "Specialty",
-      dataIndex: "profile",
-      key: "specialty",
+      dataIndex: "specialization",
+      key: "specialization",
     },
     {
       title: "",

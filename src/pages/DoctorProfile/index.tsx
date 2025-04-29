@@ -54,12 +54,12 @@ const DoctorProfile = () => {
             <Space align="center" size={16}>
               <Avatar
                 size={64}
-                style={{ backgroundColor: selectedDoctor.avatar }}
+                style={{ backgroundColor: selectedDoctor.avatarUrl }}
                 icon={<UserOutlined />}
               />
               <div>
-                <Title level={3}>{selectedDoctor.name}</Title>
-                <Text type="secondary">{selectedDoctor.profile}</Text>
+                <Title level={3}>{selectedDoctor.firstName} {selectedDoctor.lastName}</Title>
+                <Text type="secondary">{selectedDoctor.specialization}</Text>
               </div>
             </Space>
           </Col>

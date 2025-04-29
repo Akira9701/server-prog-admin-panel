@@ -24,7 +24,7 @@ export default function Root() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const currentUser = useSelector((state: RootState) => state.user.currentUser);
+  const currentUser = useSelector((state: RootState) => state.auth.user);
 
   const handleLogout = () => {
     dispatch(logoutSuccess());
@@ -36,7 +36,7 @@ export default function Root() {
       key: "profile",
       icon: <UserOutlined />,
       label: "Profile",
-      onClick: () => navigate(`/profile/${currentUser?.id}`),
+      onClick: () => navigate(currentUser?.role === 'clinic' ? `/profileClinic/${currentUser?.id}` : `/profileDoctor/${currentUser?.id}`),
     },
     {
       key: "divider",
@@ -51,11 +51,11 @@ export default function Root() {
   ];
 
   const menuItems = [
-    {
+    ...(currentUser?.role === "clinic" ? [{
       key: "/",
       icon: <DashboardOutlined />,
       label: <Link to="/">Dashboard</Link>,
-    },
+    }] : []),
     {
       key: "/appointment",
       icon: <CalendarOutlined />,
@@ -105,10 +105,10 @@ export default function Root() {
 
           <div className={styles.userProfile}>
             <div className={styles.userInfo}>
-              <Text strong>{currentUser?.name}</Text>
+              <Text strong>{currentUser?.role === 'doctor' ? `${currentUser?.firstName} ${currentUser?.lastName}` : currentUser?.name}</Text>
               <br />
               <Text type="secondary" style={{ fontSize: "12px" }}>
-                Doctor
+                {currentUser?.role}
               </Text>
             </div>
             <Dropdown menu={{ items: dropdownItems }} placement="topRight">

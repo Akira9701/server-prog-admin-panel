@@ -1,0 +1,35 @@
+.form {
+  margin-top: 24px;
+}
+
+.formItem {
+  :global(.ant-form-item-label > label) {
+    color: #6b7280;
+    font-weight: 500;
+  }
+}
+
+.input {
+  :global(.ant-input),
+  :global(.ant-input-affix-wrapper),
+  :global(.ant-select) {
+    background-color: white;
+    border-color: #e5e7eb;
+    color: #111827;
+    
+    &:disabled {
+      background-color: white;
+      color: #111827;
+      cursor: default;
+    }
+  }
+  
+  :global(.ant-select-disabled) {
+    :global(.ant-select-selector) {
+      background-color: white;
+      color: #111827;
+      cursor: default;
+    }
+  }
+}
+
