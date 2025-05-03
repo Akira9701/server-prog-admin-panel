@@ -7,12 +7,8 @@ import Register from "@/pages/Register";
 import Auth from "@/pages/Auth";
 import DoctorProfile from "../pages/DoctorProfile";
 import ClinicProfile from "../pages/ClinicProfile";
-import Login from "../pages/Login";
-import {
-  LOGIN_ROUTE,
-  REGISTER_ROUTE,
-  AUTH_ROUTE,
-} from "@/shared/constants/auth.constants";
+import PrivateRoute from "@/shared/components/PrivateRoute";
+import { REGISTER_ROUTE, AUTH_ROUTE } from "@/shared/constants/auth.constants";
 import { APP_ROUTES } from "@/shared/constants/routes.constants";
 // Import dummy page components for navigation examples
 
@@ -29,7 +25,11 @@ const router = createBrowserRouter([
   },
   {
     path: APP_ROUTES.HOME,
-    element: <Root />,
+    element: (
+      <PrivateRoute>
+        <Root />
+      </PrivateRoute>
+    ),
     errorElement: <ErrorPage />,
     children: [
       {
@@ -49,10 +49,6 @@ const router = createBrowserRouter([
         element: <ClinicProfile />,
       },
     ],
-  },
-  {
-    path: LOGIN_ROUTE,
-    element: <Login />,
   },
 ]);
 

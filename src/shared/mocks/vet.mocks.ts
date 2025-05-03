@@ -1,0 +1,66 @@
+import { Vet, Address } from "@/types/vet.types";
+
+const medicAddress: Address = {
+  city: "Москва",
+  street: "Ленина",
+  building: "15",
+};
+
+export const vetMocks: Vet[] = [
+  {
+    id: "vet-1",
+    firstName: "Иван",
+    lastName: "Петров",
+    email: "medic@mail.ru",
+    password: "medic",
+    specialization: "Хирург",
+    qualification: "Высшая категория",
+    bio: "Опыт работы 10 лет, специализация на ортопедии",
+    avatarUrl: "https://example.com/avatar1.jpg",
+    clinic: null,
+    services: ["Консультация", "Операция", "УЗИ"],
+    address: medicAddress,
+    role: "doctor",
+    createdAt: "2023-01-01T00:00:00.000Z",
+  },
+  {
+    id: "vet-2",
+    firstName: "Анна",
+    lastName: "Смирнова",
+    email: "anna@example.com",
+    password: "password123",
+    specialization: "Терапевт",
+    qualification: "Первая категория",
+    bio: "Опыт работы 5 лет, специализация на кардиологии мелких животных",
+    avatarUrl: "https://example.com/avatar2.jpg",
+    clinic: {
+      id: "clinic-1",
+      name: "Ветклиника №1",
+      logoUrl: "https://example.com/logo1.png",
+    },
+    services: ["Консультация", "Вакцинация", "ЭКГ"],
+    address: null,
+    role: "doctor",
+    createdAt: "2023-02-15T00:00:00.000Z",
+  },
+  {
+    id: "vet-3",
+    firstName: "Сергей",
+    lastName: "Иванов",
+    email: "sergey@example.com",
+    password: "password123",
+    specialization: "Дерматолог",
+    qualification: "Вторая категория",
+    bio: "Опыт работы 3 года, специализация на аллергических заболеваниях",
+    avatarUrl: "https://example.com/avatar3.jpg",
+    clinic: {
+      id: "clinic-2",
+      name: "Ветклиника №2",
+      logoUrl: "https://example.com/logo2.png",
+    },
+    services: ["Консультация", "Аллергопробы", "Лечение кожных заболеваний"],
+    address: null,
+    role: "doctor",
+    createdAt: "2023-03-20T00:00:00.000Z",
+  },
+];

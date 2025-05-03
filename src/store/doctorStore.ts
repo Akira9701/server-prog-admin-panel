@@ -7,71 +7,69 @@ interface DoctorState {
   selectedDoctor: Doctor | null;
   loading: boolean;
   error: string | null;
-
-  // Actions
-  setDoctors: (doctors: Doctor[]) => void;
-  setSelectedDoctor: (doctor: Doctor | null) => void;
-  fetchDoctorsStart: () => void;
-  fetchDoctorsSuccess: (doctors: Doctor[]) => void;
-  fetchDoctorsFailure: (error: string) => void;
-  fetchDoctorByIdStart: () => void;
-  fetchDoctorByIdSuccess: (doctor: Doctor) => void;
-  fetchDoctorByIdFailure: (error: string) => void;
 }
 
-export const useDoctorStore = create<DoctorState>((set) => ({
+export const useDoctorStore = create<DoctorState>(() => ({
   doctors: doctorsMock,
   selectedDoctor: null,
   loading: false,
   error: null,
-
-  setDoctors: (doctors) =>
-    set(() => ({
-      doctors,
-      loading: false,
-      error: null,
-    })),
-
-  setSelectedDoctor: (doctor) =>
-    set(() => ({
-      selectedDoctor: doctor,
-    })),
-
-  fetchDoctorsStart: () =>
-    set(() => ({
-      loading: true,
-      error: null,
-    })),
-
-  fetchDoctorsSuccess: (doctors) =>
-    set(() => ({
-      doctors,
-      loading: false,
-      error: null,
-    })),
-
-  fetchDoctorsFailure: (error) =>
-    set(() => ({
-      loading: false,
-      error,
-    })),
-
-  fetchDoctorByIdStart: () =>
-    set(() => ({
-      loading: true,
-      error: null,
-    })),
-
-  fetchDoctorByIdSuccess: (doctor) =>
-    set(() => ({
-      selectedDoctor: doctor,
-      loading: false,
-      error: null,
-    })),
-
-  fetchDoctorByIdFailure: (error) =>
-    set(() => ({
-      loading: false,
-      error,
-    })),
 }));
+
+// Selectors
+export const selectDoctors = (state: DoctorState) => state.doctors;
+export const selectSelectedDoctor = (state: DoctorState) =>
+  state.selectedDoctor;
+export const selectIsLoading = (state: DoctorState) => state.loading;
+export const selectError = (state: DoctorState) => state.error;
+
+// Actions
+export const setDoctors = (doctors: Doctor[]) =>
+  useDoctorStore.setState({
+    doctors,
+    loading: false,
+    error: null,
+  });
+
+export const setSelectedDoctor = (doctor: Doctor | null) =>
+  useDoctorStore.setState({
+    selectedDoctor: doctor,
+  });
+
+export const fetchDoctorsStart = () =>
+  useDoctorStore.setState({
+    loading: true,
+    error: null,
+  });
+
+export const fetchDoctorsSuccess = (doctors: Doctor[]) =>
+  useDoctorStore.setState({
+    doctors,
+    loading: false,
+    error: null,
+  });
+
+export const fetchDoctorsFailure = (error: string) =>
+  useDoctorStore.setState({
+    loading: false,
+    error,
+  });
+
+export const fetchDoctorByIdStart = () =>
+  useDoctorStore.setState({
+    loading: true,
+    error: null,
+  });
+
+export const fetchDoctorByIdSuccess = (doctor: Doctor) =>
+  useDoctorStore.setState({
+    selectedDoctor: doctor,
+    loading: false,
+    error: null,
+  });
+
+export const fetchDoctorByIdFailure = (error: string) =>
+  useDoctorStore.setState({
+    loading: false,
+    error,
+  });

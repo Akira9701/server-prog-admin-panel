@@ -1,3 +1,6 @@
+import { PetShort } from "./pet.types";
+import { Address } from "./vet.types";
+
 export interface User {
   id: string;
   name?: string;
@@ -5,8 +8,52 @@ export interface User {
   lastName?: string;
   email: string;
   password: string;
-  role: "doctor" | "clinic"; //хз нужно ли
+  role: "doctor" | "clinic";
   createdAt: string;
+}
+
+export interface UserProfile {
+  id: string;
+  userId: string;
+  firstName: string;
+  lastName: string;
+  phone?: string;
+  avatarUrl?: string;
+  address?: Address;
+  pets?: PetShort[];
+}
+
+export interface UserProfileUpdate {
+  firstName: string;
+  lastName: string;
+  phone?: string;
+  address?: Address;
+  avatarUrl?: string;
+}
+
+export interface UserRegistration {
+  userId: string;
+  firstName: string;
+  lastName: string;
+  email?: string;
+  password?: string; // Added for auth
+}
+
+export interface AuthResponse {
+  token: string;
+  type: string;
+}
+
+export interface LoginCredentials {
+  email: string;
+  password: string;
+}
+
+export interface AuthState {
+  user: User | null;
+  token: string | null;
+  loading: boolean;
+  error: string | null;
 }
 
 export interface Doctor extends User {
@@ -33,7 +80,6 @@ export interface Clinic extends User {
   updatedAt: string;
 }
 
-
 export interface Appointment {
   id: string;
   doctorId: string;
@@ -55,18 +101,3 @@ export interface Review {
   comment: string;
   date: string;
 }
-
-export interface LoginCredentials {
-  email: string;
-  password: string;
-}
-
-
-export interface AuthState {
-  user: User | null;
-  token: string | null;
-  loading: boolean;
-  error: string | null;
-}
-
-

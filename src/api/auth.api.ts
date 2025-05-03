@@ -1,69 +1,150 @@
-import apiInstance from "./instance.api";
+import {
+  AuthResponse,
+  LoginCredentials,
+  UserRegistration,
+  User,
+} from "@/types/user.types";
+import {
+  loginSuccess,
+  loginFailure,
+  loginStart,
+  registerStart,
+  registerSuccess,
+  registerFailure,
+} from "@/store/authStore";
+import { vetMocks } from "@/shared/mocks/vet.mocks";
+import { clinicMocks } from "@/shared/mocks/clinic.mocks";
 
-interface LoginData {
-  login: string;
-  password: string;
-}
+// Simulated API responses with promises
+const mockLogin = async (
+  credentials: LoginCredentials
+): Promise<AuthResponse> => {
+  // Search in vets and clinics
+  const foundVet = vetMocks.find(
+    (vet) =>
+      vet.email === credentials.email && vet.password === credentials.password
+  );
 
-interface ChangePasswordData {
-  oldPassword: string;
-  newPassword: string;
-}
+  const foundClinic = clinicMocks.find(
+    (clinic) =>
+      clinic.email === credentials.email &&
+      clinic.password === credentials.password
+  );
 
+  if (foundVet || foundClinic) {
+    // Simulated successful login
+    return {
+      token: "mock-jwt-token-" + Date.now(),
+      type: "Bearer",
+    };
+  }
 
-interface VerifyTokenResponse {
-  login: string;
-  userType: string;
-  name: string;
-  surname: string;
-  enabled: boolean;
-}
+  // Simulated failed login
+  throw new Error("Invalid credentials");
+};
 
-
-interface RegisterData {
-  login: string;
-  password: string;
-  email: string;
-  name: string;
-  surname: string;
-  userType: string;    
-}
-
-interface AuthResponse {
-  token: string;
-  type: string;
-}
+const mockRegister = async (_data: UserRegistration): Promise<AuthResponse> => {
+  // Simulated successful registration
+  return {
+    token: "mock-jwt-token-" + Date.now(),
+    type: "Bearer",
+  };
+};
 
 export const authApi = {
+  // Login with mock data
+  login: async (credentials: LoginCredentials) => {
+    try {
+      loginStart();
+      const response = await mockLogin(credentials);
 
-  login: async (data: LoginData) => {
-    const response = await apiInstance.post<AuthResponse>("/login", data);
-    return response.data;
+      // Find the user data to return
+      const user = vetMocks.find((v) => v.email === credentials.email);
+      if (user) {
+        loginSuccess(
+          {
+            id: user.id,
+            firstName: user.firstName,
+            lastName: user.lastName,
+            email: user.email,
+            password: user.password || "",
+            role: "doctor",
+            createdAt: user.createdAt || new Date().toISOString(),
+          },
+          response.token
+        );
+      } else {
+        const clinic = clinicMocks.find((c) => c.email === credentials.email);
+        if (clinic) {
+          loginSuccess(
+            {
+              id: clinic.id,
+              name: clinic.name,
+              email: clinic.email,
+              password: clinic.password || "",
+              role: "clinic",
+              createdAt: clinic.createdAt || new Date().toISOString(),
+            },
+            response.token
+          );
+        }
+      }
+
+      return response;
+    } catch (error) {
+      loginFailure((error as Error).message);
+      throw error;
+    }
   },
 
-  register: async (data: RegisterData) => {
-    const response = await apiInstance.post<AuthResponse>(
-      "/signup",
-      data
-    );
-    return response.data;
+  // Register with mock data
+  register: async (data: UserRegistration) => {
+    try {
+      registerStart();
+      const response = await mockRegister(data);
+
+      // Create a basic user from registration data
+      const newUser: User = {
+        id: `user-${Date.now()}`,
+        firstName: data.firstName,
+        lastName: data.lastName,
+        email: data.email || "",
+        password: data.password || "",
+        role: "doctor",
+        createdAt: new Date().toISOString(),
+      };
+
+      registerSuccess(newUser, response.token);
+      return response;
+    } catch (error) {
+      registerFailure((error as Error).message);
+      throw error;
+    }
   },
 
+  // Verify token
+  verifyToken: async () => {
+    // Just return true for all mock tokens
+    return { valid: true };
+  },
+
+  // Logout
   logout: async () => {
-    const response = await apiInstance.post("/logout");
-    return response.data;
+    // Just return success for mock
+    return { success: true };
   },
 
-  refresh: async (refreshToken: string) => {
-    const response = await apiInstance.post<AuthResponse>("/refresh", { refreshToken });
-    return response.data;
+  // For compatibility with the existing API
+  refresh: async (_refreshToken: string) => {
+    return {
+      token: "mock-refresh-token-" + Date.now(),
+      type: "Bearer",
+    };
   },
-  changePassword: async (oldPassword: string, newPassword: string) => {
-    const response = await apiInstance.post<ChangePasswordData>("/change-password", { oldPassword, newPassword });
-    return response.data;
-  },
-  verifyToken: async (token: string) => {
-    const response = await apiInstance.post<VerifyTokenResponse>("/verify-token", { token });
-    return response.data;
+
+  changePassword: async (_oldPassword: string, _newPassword: string) => {
+    return {
+      success: true,
+    };
   },
 };

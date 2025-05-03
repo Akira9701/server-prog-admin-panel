@@ -2,6 +2,22 @@ import { Doctor } from "../../types/user.types";
 
 export const doctors: Doctor[] = [
   {
+    id: "test-doctor",
+    firstName: "Test",
+    lastName: "Doctor",
+    email: "medic@mail.ru",
+    password: "medic",
+    role: "doctor",
+    avatarUrl: "#3b82f6",
+    specialization: "General Practice",
+    qualification: "10 years",
+    rating: 4.5,
+    totalPatients: 1000,
+    totalAppointments: 5000,
+    createdAt: "2023-01-01T00:00:00.000Z",
+    bio: "Test doctor account for demonstration purposes.",
+  },
+  {
     id: "1",
     firstName: "Dr.",
     lastName: "Anmangandla",
@@ -15,7 +31,7 @@ export const doctors: Doctor[] = [
     totalPatients: 32100,
     totalAppointments: 4250,
     createdAt: "2020-01-01T00:00:00.000Z",
-    bio: "Dr. Dilip Anmangandla is a cardiologist with a passion for helping patients achieve optimal heart health. With over 15 years of experience, he has a deep understanding of the latest medical advancements in cardiology."
+    bio: "Dr. Dilip Anmangandla is a cardiologist with a passion for helping patients achieve optimal heart health. With over 15 years of experience, he has a deep understanding of the latest medical advancements in cardiology.",
   },
   {
     id: "2",
@@ -31,7 +47,7 @@ export const doctors: Doctor[] = [
     totalPatients: 25400,
     totalAppointments: 3180,
     createdAt: "2020-03-15T00:00:00.000Z",
-    bio: "Dr. Carol D. Pollock is a neurologist with a passion for helping patients achieve optimal brain health. With over 10 years of experience, she has a deep understanding of the latest medical advancements in neurology."
+    bio: "Dr. Carol D. Pollock is a neurologist with a passion for helping patients achieve optimal brain health. With over 10 years of experience, she has a deep understanding of the latest medical advancements in neurology.",
   },
   {
     id: "3",
@@ -47,7 +63,7 @@ export const doctors: Doctor[] = [
     totalPatients: 28300,
     totalAppointments: 3650,
     createdAt: "2020-02-10T00:00:00.000Z",
-    bio: "Dr. Donald F. Warren is an orthopedic surgeon with a passion for helping patients achieve optimal joint health. With over 12 years of experience, he has a deep understanding of the latest medical advancements in orthopedics."
+    bio: "Dr. Donald F. Warren is an orthopedic surgeon with a passion for helping patients achieve optimal joint health. With over 12 years of experience, he has a deep understanding of the latest medical advancements in orthopedics.",
   },
   {
     id: "4",
@@ -63,7 +79,7 @@ export const doctors: Doctor[] = [
     totalPatients: 19800,
     totalAppointments: 2460,
     createdAt: "2021-04-20T00:00:00.000Z",
-    bio: "Dr. Sarah Connors is a dermatologist with a passion for helping patients achieve optimal skin health. With over 8 years of experience, she has a deep understanding of the latest medical advancements in dermatology."
+    bio: "Dr. Sarah Connors is a dermatologist with a passion for helping patients achieve optimal skin health. With over 8 years of experience, she has a deep understanding of the latest medical advancements in dermatology.",
   },
   {
     id: "5",
@@ -79,7 +95,7 @@ export const doctors: Doctor[] = [
     totalPatients: 30200,
     totalAppointments: 3980,
     createdAt: "2019-11-15T00:00:00.000Z",
-    bio: "Dr. Michael Chen is an ophthalmologist with a passion for helping patients achieve optimal eye health. With over 14 years of experience, he has a deep understanding of the latest medical advancements in ophthalmology."
+    bio: "Dr. Michael Chen is an ophthalmologist with a passion for helping patients achieve optimal eye health. With over 14 years of experience, he has a deep understanding of the latest medical advancements in ophthalmology.",
   },
   {
     id: "6",
@@ -95,6 +111,6 @@ export const doctors: Doctor[] = [
     totalPatients: 27500,
     totalAppointments: 3420,
     createdAt: "2020-05-12T00:00:00.000Z",
-    bio: "Dr. Elena Rodriguez is a pediatrician with a passion for helping patients achieve optimal child health. With over 11 years of experience, she has a deep understanding of the latest medical advancements in pediatrics."
+    bio: "Dr. Elena Rodriguez is a pediatrician with a passion for helping patients achieve optimal child health. With over 11 years of experience, she has a deep understanding of the latest medical advancements in pediatrics.",
   },
 ];

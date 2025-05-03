@@ -1,26 +1,35 @@
-import { Clinic } from "./user.types";
+import { Address, VetShort } from "./vet.types";
 
-export interface ClinicState {
-  clinics: Clinic[];
-  selectedClinic: Clinic | null;
-  loading: boolean;
-  error: string | null;
+export interface ClinicRegistration {
+  name: string;
+  description: string;
+  phone: string;
+  email: string;
+  address: Address;
+  licenseNumber: string;
+  workingHours?: string[];
+  password?: string; // Added for auth
 }
 
-
-export interface ClinicStatistics {
-    totalAppointments: number;
-    totalDoctors: number;
-    totalPatients: number;
-    appointmentsBySpecialty: {
-      specialty: string;
-      count: number;
-    }[];
-    appointmentsByStatus: {
-      status: string;
-      count: number;
-    }[];
-  } 
+export interface Clinic {
+  id: string;
+  name: string;
+  description: string;
+  phone: string;
+  email: string;
+  city: string;
+  street: string;
+  building: string;
+  postalCode?: string;
+  services: string[];
+  logoUrl: string;
+  workingHours: string[];
+  vets: VetShort[];
+  password?: string; // Added for auth
+  role?: string; // Added for auth
+  createdAt?: string; // Added for storage
+  updatedAt?: string; // Added for storage
+}
 
 export interface ClinicAppointment {
   id: string;
@@ -31,26 +40,3 @@ export interface ClinicAppointment {
   patientName: string;
   status: "scheduled" | "completed" | "cancelled";
 }
-
-export interface ClinicProfile {
-    id: string;
-    name: string;
-    email: string;
-    address: string;
-    phone: string;
-    workingHours: string;
-    description: string;
-    specialties: string[];
-    totalDoctors: number;
-    totalPatients: number;
-    totalAppointments: number;
-    rating: number;
-    reviews: {
-      id: string;
-      patientName: string;
-      rating: number;
-      comment: string;
-      date: string;
-    }[];
-  }
-  

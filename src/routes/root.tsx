@@ -11,10 +11,10 @@ import {
   LogoutOutlined,
   DownOutlined,
 } from "@ant-design/icons";
-import { useAuthStore } from "@/store/authStore";
+import { useAuthStore, selectUser, logoutSuccess } from "@/store/authStore";
 import { getProfileRoute } from "@/shared/constants/routes.constants";
-import { LOGIN_ROUTE } from "@/shared/constants/auth.constants";
 import styles from "./styles.module.scss";
+import { AUTH_ROUTE } from "@/shared/constants/auth.constants";
 
 const { Sider, Content } = Layout;
 const { Text } = Typography;
@@ -22,11 +22,11 @@ const { Text } = Typography;
 export default function Root() {
   const location = useLocation();
   const navigate = useNavigate();
-  const { user, logoutSuccess } = useAuthStore();
+  const user = useAuthStore(selectUser);
 
   const handleLogout = () => {
     logoutSuccess();
-    navigate(LOGIN_ROUTE);
+    navigate(AUTH_ROUTE);
   };
 
   const dropdownItems: MenuProps["items"] = [

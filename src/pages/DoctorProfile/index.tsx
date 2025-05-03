@@ -12,7 +12,7 @@ import {
   Progress,
 } from "antd";
 import { CalendarOutlined, UserOutlined, StarFilled } from "@ant-design/icons";
-import { useDoctorStore } from "@/store/doctorStore";
+import { useDoctorStore, fetchDoctorByIdSuccess } from "@/store/doctorStore";
 import { doctors } from "../../shared/mocks/doctors.mocks";
 import { doctorAppointments } from "../../shared/mocks/appointments.mocks";
 import styles from "./styles.module.scss";
@@ -21,7 +21,7 @@ const { Title, Text } = Typography;
 
 const DoctorProfile = () => {
   const { id } = useParams<{ id: string }>();
-  const { selectedDoctor, fetchDoctorByIdSuccess } = useDoctorStore();
+  const { selectedDoctor } = useDoctorStore();
 
   useEffect(() => {
     // Find doctor from mock data
@@ -29,7 +29,7 @@ const DoctorProfile = () => {
     if (doctor) {
       fetchDoctorByIdSuccess(doctor);
     }
-  }, [id, fetchDoctorByIdSuccess]);
+  }, [id]);
 
   if (!selectedDoctor) {
     return <div>Loading...</div>;

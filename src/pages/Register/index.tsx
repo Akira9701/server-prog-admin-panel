@@ -1,45 +1,57 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import TextInput from "@/shared/components/TextInput/index";
 import PasswordInput from "@/shared/components/PasswordInput/index";
 import Button from "@/shared/components/Button/index";
 import styles from "./styles.module.scss";
-import Switcher from "@/shared/components/Switcher/index";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useAuthStore, selectIsAuthenticated } from "@/store/authStore";
+import { authApi } from "@/api/auth.api";
+import { UserRegistration } from "@/types/user.types";
 
 const Register = () => {
-  const [form, setForm] = useState({
+  const isAuthenticated = useAuthStore(selectIsAuthenticated);
+  const navigate = useNavigate();
+
+  const [form, setForm] = useState<UserRegistration>({
+    userId: "",
+    firstName: "",
+    lastName: "",
     email: "",
-    phone: "",
     password: "",
-    confirmPassword: "",
-    terms: false,
-    clinicName: "",
   });
 
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
   const [touched, setTouched] = useState<{ [key: string]: boolean }>({});
+  const [loading, setLoading] = useState(false);
+
+  // Redirect if already authenticated
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigate("/");
+    }
+  }, [isAuthenticated, navigate]);
 
   const validateField = (name: string, value: string) => {
     switch (name) {
+      case "firstName":
+        if (!value) return "Введите имя";
+        break;
+      case "lastName":
+        if (!value) return "Введите фамилию";
+        break;
       case "email":
         if (!value) return "Введите email";
         if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(value))
           return "Некорректный email";
         break;
-      case "phone":
-        if (!value) return "Введите номер телефона";
-        if (!/^\+?[0-9]{10,12}$/.test(value))
-          return "Некорректный номер телефона";
-        break;
       case "password":
         if (!value) return "Введите пароль";
-        if (value.length < 6) return "Пароль слишком короткий";
+        if (value.length < 6) return "Пароль должен быть не менее 6 символов";
         break;
       case "confirmPassword":
+        if (!value) return "Повторите пароль";
         if (value !== form.password) return "Пароли не совпадают";
-        break;
-      case "clinicName":
-        if (!form.terms && !value) return "Введите название клиники";
         break;
       default:
         return "";
@@ -47,14 +59,14 @@ const Register = () => {
     return "";
   };
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value, type, checked } = e.target;
-    const fieldValue = type === "checkbox" ? checked : value;
-    setForm((prev) => ({
-      ...prev,
-      [name]: fieldValue,
-    }));
-  };
+  const handleInputChange =
+    (field: keyof UserRegistration) =>
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      setForm((prev: UserRegistration) => ({
+        ...prev,
+        [field]: e.target.value,
+      }));
+    };
 
   const handleBlur = (e: React.FocusEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -67,43 +79,51 @@ const Register = () => {
     setErrors((prev) => ({
       ...prev,
       [name]: validateField(name, value),
-      ...(name === "password" && {
-        confirmPassword: validateField("confirmPassword", form.confirmPassword),
-      }),
     }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const validationErrors: { [key: string]: string } = {};
 
-    // Validate all fields and collect errors
-    Object.entries(form).forEach(([name, value]) => {
+    // Mark all fields as touched
+    const touchedFields = {
+      firstName: true,
+      lastName: true,
+      email: true,
+      password: true,
+      confirmPassword: true,
+    };
+    setTouched(touchedFields);
+
+    // Validate all fields
+    Object.entries({
+      ...form,
+      confirmPassword,
+    }).forEach(([name, value]) => {
       const error = validateField(name, String(value));
       if (error) {
         validationErrors[name] = error;
       }
     });
 
-    // Set all fields as touched to show errors
-    const touchedFields = Object.keys(form).reduce(
-      (acc, field) => ({
-        ...acc,
-        [field]: true,
-      }),
-      {}
-    );
-    setTouched(touchedFields);
+    // Generate a random userId
+    form.userId = `user-${Date.now()}`;
 
-    // Update errors state
     setErrors(validationErrors);
-
-    // Only proceed if there are no validation errors
     if (Object.keys(validationErrors).length === 0) {
-      console.log("Form submitted successfully");
-      // Here you can add API call to register user
-    } else {
-      console.log("Form has validation errors");
+      try {
+        setLoading(true);
+        await authApi.register(form);
+        setLoading(false);
+        navigate("/");
+      } catch (error) {
+        setLoading(false);
+        console.error("Registration error:", error);
+        setErrors({
+          email: "Ошибка при регистрации",
+        });
+      }
     }
   };
 
@@ -113,41 +133,63 @@ const Register = () => {
         <div className={styles.logo}>
           <img src="/src/shared/assets/logo/Dark.svg" alt="Logo" />
         </div>
-        <div className={styles.title}>
-          Пожалуйста, введите ваши данные для регистрации
-        </div>
+        <div className={styles.title}>Регистрация нового аккаунта</div>
       </div>
       <form onSubmit={handleSubmit}>
         <div className={styles.formGroup}>
-          <label className={styles.formLabel}>Адрес электронной почты</label>
-          <TextInput
-            name="email"
-            placeholder="force@adresseemail.com"
-            value={form.email}
-            onChange={handleChange}
-            onBlur={handleBlur}
-            style={{ marginTop: 6 }}
-            error={touched.email && !!errors.email}
-          />
-          {touched.email && errors.email && (
-            <div className={styles.errorText}>{errors.email}</div>
-          )}
+          <label className={styles.formLabel}>Имя</label>
+          <div>
+            <TextInput
+              name="firstName"
+              placeholder="Иван"
+              value={form.firstName}
+              onChange={handleInputChange("firstName")}
+              onBlur={handleBlur}
+              style={{ marginTop: 6 }}
+              error={touched.firstName && !!errors.firstName}
+            />
+            {touched.firstName && errors.firstName && (
+              <div className={styles.errorText}>{errors.firstName}</div>
+            )}
+          </div>
         </div>
+
         <div className={styles.formGroup}>
-          <label className={styles.formLabel}>Номер телефона</label>
-          <TextInput
-            name="phone"
-            placeholder="(+7) 696 88 77 55"
-            value={form.phone}
-            onChange={handleChange}
-            onBlur={handleBlur}
-            style={{ marginTop: 6 }}
-            error={touched.phone && !!errors.phone}
-          />
-          {touched.phone && errors.phone && (
-            <div className={styles.errorText}>{errors.phone}</div>
-          )}
+          <label className={styles.formLabel}>Фамилия</label>
+          <div>
+            <TextInput
+              name="lastName"
+              placeholder="Петров"
+              value={form.lastName}
+              onChange={handleInputChange("lastName")}
+              onBlur={handleBlur}
+              style={{ marginTop: 6 }}
+              error={touched.lastName && !!errors.lastName}
+            />
+            {touched.lastName && errors.lastName && (
+              <div className={styles.errorText}>{errors.lastName}</div>
+            )}
+          </div>
         </div>
+
+        <div className={styles.formGroup}>
+          <label className={styles.formLabel}>Email</label>
+          <div>
+            <TextInput
+              name="email"
+              placeholder="example@mail.ru"
+              value={form.email}
+              onChange={handleInputChange("email")}
+              onBlur={handleBlur}
+              style={{ marginTop: 6 }}
+              error={touched.email && !!errors.email}
+            />
+            {touched.email && errors.email && (
+              <div className={styles.errorText}>{errors.email}</div>
+            )}
+          </div>
+        </div>
+
         <div className={styles.formGroup}>
           <label className={styles.formLabel}>Пароль</label>
           <div>
@@ -155,7 +197,7 @@ const Register = () => {
               name="password"
               placeholder="********************"
               value={form.password}
-              onChange={handleChange}
+              onChange={handleInputChange("password")}
               onBlur={handleBlur}
               style={{ marginTop: 6 }}
               error={touched.password && !!errors.password}
@@ -165,53 +207,33 @@ const Register = () => {
             )}
           </div>
         </div>
+
         <div className={styles.formGroup}>
-          <label className={styles.formLabel}>Подтвердите свой пароль</label>
-          <PasswordInput
-            name="confirmPassword"
-            placeholder="********************"
-            value={form.confirmPassword}
-            onChange={handleChange}
-            onBlur={handleBlur}
-            style={{ marginTop: 6 }}
-            error={touched.confirmPassword && !!errors.confirmPassword}
-          />
-          {touched.confirmPassword && errors.confirmPassword && (
-            <div className={styles.errorText}>{errors.confirmPassword}</div>
-          )}
-        </div>
-        <div className={styles.formGroup}>
-          <div className={styles.switcherCenter}>
-            <span>Клиника</span>
-            <Switcher
-              name="terms"
-              checked={form.terms}
-              onChange={handleChange}
-            />
-            <span>Частный врач</span>
-          </div>
-        </div>
-        {!form.terms && (
-          <div className={styles.formGroup}>
-            <label className={styles.formLabel}>Название клиники</label>
-            <TextInput
-              name="clinicName"
-              placeholder="Введите название клиники"
-              value={form.clinicName || ""}
-              onChange={handleChange}
+          <label className={styles.formLabel}>Подтверждение пароля</label>
+          <div>
+            <PasswordInput
+              name="confirmPassword"
+              placeholder="********************"
+              value={confirmPassword}
+              onChange={(e) => {
+                setConfirmPassword(e.target.value);
+              }}
               onBlur={handleBlur}
               style={{ marginTop: 6 }}
-              error={touched.clinicName && !!errors.clinicName}
+              error={touched.confirmPassword && !!errors.confirmPassword}
             />
-            {touched.clinicName && errors.clinicName && (
-              <div className={styles.errorText}>{errors.clinicName}</div>
+            {touched.confirmPassword && errors.confirmPassword && (
+              <div className={styles.errorText}>{errors.confirmPassword}</div>
             )}
           </div>
-        )}
-        <Button type="submit">Зарегистрироваться</Button>
+        </div>
+
+        <Button type="submit" disabled={loading}>
+          {loading ? "Регистрация..." : "Зарегистрироваться"}
+        </Button>
       </form>
       <div className={styles.bottomText}>
-        У вас уже есть аккаунт?{" "}
+        Уже есть аккаунт?{" "}
         <Link to="/auth" className={styles.link}>
           Войти
         </Link>

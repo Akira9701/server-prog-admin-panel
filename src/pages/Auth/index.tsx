@@ -1,37 +1,46 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import TextInput from "@/shared/components/TextInput/index";
 import PasswordInput from "@/shared/components/PasswordInput/index";
 import Button from "@/shared/components/Button/index";
 import styles from "./styles.module.scss";
-import { Link } from "react-router-dom";
-import { clinics } from "@/shared/mocks/clinic.mocks";
-import { doctors } from "@/shared/mocks/doctors.mocks";
-import { useAuthStore } from "@/store/authStore";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
+import { clinicMocks } from "@/shared/mocks/clinic.mocks";
+import { vetMocks } from "@/shared/mocks/vet.mocks";
+import {
+  useAuthStore,
+  selectIsAuthenticated,
+  loginSuccess,
+} from "@/store/authStore";
+import { User } from "@/types/user.types";
 
 const Auth = () => {
-  const { loginSuccess } = useAuthStore();
+  const isAuthenticated = useAuthStore(selectIsAuthenticated);
   const navigate = useNavigate();
+  const location = useLocation();
+  const from = location.state?.from || "/";
+
   const [form, setForm] = useState({
     email: "",
     password: "",
-    confirmPassword: "",
-    terms: false,
   });
 
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
   const [touched, setTouched] = useState<{ [key: string]: boolean }>({});
 
+  // Redirect if already authenticated
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigate(from, { replace: true });
+    }
+  }, [isAuthenticated, navigate, from]);
+
   const validateField = (name: string, value: string) => {
     switch (name) {
       case "email":
         if (!value) return "Введите email";
-        if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(value))
-          return "Некорректный email";
         break;
       case "password":
         if (!value) return "Введите пароль";
-        if (value.length < 6) return "Пароль слишком короткий";
         break;
       default:
         return "";
@@ -40,11 +49,10 @@ const Auth = () => {
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value, type, checked } = e.target;
-    const fieldValue = type === "checkbox" ? checked : value;
+    const { name, value } = e.target;
     setForm((prev) => ({
       ...prev,
-      [name]: fieldValue,
+      [name]: value,
     }));
   };
 
@@ -59,9 +67,6 @@ const Auth = () => {
     setErrors((prev) => ({
       ...prev,
       [name]: validateField(name, value),
-      ...(name === "password" && {
-        confirmPassword: validateField("confirmPassword", form.confirmPassword),
-      }),
     }));
   };
 
@@ -90,23 +95,52 @@ const Auth = () => {
     setErrors(validationErrors);
     if (Object.keys(validationErrors).length === 0) {
       try {
-        const ThisClinics = clinics.find(
-          (u) => u.email === form.email && u.password === form.password
+        // Try to find a matching clinic
+        const foundClinic = clinicMocks.find(
+          (c) => c.email === form.email && c.password === form.password
         );
-        const ThisDoctor = doctors.find(
-          (u) => u.email === form.email && u.password === form.password
+
+        // Try to find a matching vet
+        const foundVet = vetMocks.find(
+          (v) => v.email === form.email && v.password === form.password
         );
-        const user = ThisClinics || ThisDoctor;
+
+        // Determine which user was found
+        let user: User | null = null;
+        if (foundClinic) {
+          // Convert clinic to User type for auth store
+          user = {
+            id: foundClinic.id,
+            name: foundClinic.name,
+            email: foundClinic.email,
+            password: foundClinic.password || "", // Ensure string
+            role: "clinic",
+            createdAt: foundClinic.createdAt || new Date().toISOString(),
+          };
+        } else if (foundVet) {
+          // Convert vet to User type for auth store
+          user = {
+            id: foundVet.id,
+            firstName: foundVet.firstName,
+            lastName: foundVet.lastName,
+            email: foundVet.email,
+            password: foundVet.password || "", // Ensure string
+            role: "doctor",
+            createdAt: foundVet.createdAt || new Date().toISOString(),
+          };
+        }
+
         if (user) {
           loginSuccess(user, "mock-token");
-          navigate("/");
+          navigate(from, { replace: true });
         } else {
           setErrors({
             email: "Неверный email или пароль",
             password: "Неверный email или пароль",
           });
         }
-      } catch {
+      } catch (error) {
+        console.error("Auth error:", error);
         setErrors({
           email: "Произошла ошибка при входе",
           password: "Произошла ошибка при входе",
@@ -131,7 +165,7 @@ const Auth = () => {
           <div>
             <TextInput
               name="email"
-              placeholder="force@adresseemail.com"
+              placeholder="example@mail.ru"
               value={form.email}
               onChange={handleChange}
               onBlur={handleBlur}
@@ -167,6 +201,11 @@ const Auth = () => {
         <Link to="/register" className={styles.link}>
           Зарегистрироваться
         </Link>
+      </div>
+      <div className={styles.testCredentials}>
+        <p>Тестовые аккаунты:</p>
+        <p>Клиника: clinic@mail.ru / clinic</p>
+        <p>Врач: medic@mail.ru / medic</p>
       </div>
     </div>
   );

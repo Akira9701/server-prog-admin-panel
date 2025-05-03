@@ -1,60 +1,60 @@
-import { Clinic } from "../../types/user.types";
+import { Clinic } from "@/types/clinic.types";
+import { VetShort } from "@/types/vet.types";
 
-export const clinics: Clinic[] = [
+const vetShortList: VetShort[] = [
   {
-    id: "1",
-    name: "Happy Care Clinic",
-    email: "clinic@happycare.com",
-    password: "clinic123",
+    id: "vet-2",
+    firstName: "Анна",
+    lastName: "Смирнова",
+    specialization: "Терапевт",
+    avatarUrl: "https://example.com/avatar2.jpg",
+  },
+  {
+    id: "vet-3",
+    firstName: "Сергей",
+    lastName: "Иванов",
+    specialization: "Дерматолог",
+    avatarUrl: "https://example.com/avatar3.jpg",
+  },
+];
+
+export const clinicMocks: Clinic[] = [
+  {
+    id: "clinic-1",
+    name: "Test Clinic Account",
+    description: "Тестовая ветеринарная клиника с полным спектром услуг",
+    email: "clinic@mail.ru",
+    phone: "+7 (999) 123-4567",
+    city: "Москва",
+    street: "Пушкина",
+    building: "10",
+    postalCode: "123456",
+    services: ["Стационар", "Лаборатория", "Рентген", "УЗИ"],
+    logoUrl: "https://example.com/logo1.png",
+    workingHours: ["Пн-Пт: 9:00-18:00", "Сб: 10:00-15:00"],
+    vets: vetShortList,
+    password: "clinic",
     role: "clinic",
-    logoUrl: "#3b82f6",
-    createdAt: "2020-01-01T00:00:00.000Z",
+    createdAt: "2023-01-01T00:00:00.000Z",
     updatedAt: "2023-06-01T00:00:00.000Z",
-    address: "123 Medical Center Drive, New York, NY 10001",
-    phone: "+1 (555) 123-4567",
-    workingHours: "Mon-Fri: 8:00 AM - 8:00 PM, Sat: 9:00 AM - 5:00 PM",
-    description: "Happy Care Clinic is a state-of-the-art medical facility that provides comprehensive healthcare services to patients of all ages. Our team of experienced doctors and nurses are dedicated to delivering the highest quality care to our patients."
   },
   {
-    id: "2",
-    name: "Gulliver Clinic",
-    email: "gulliver@clinic.com",
-    password: "gulliver123",
+    id: "clinic-2",
+    name: "Ветклиника №2",
+    description: "Современная ветеринарная клиника для домашних животных",
+    email: "info@vet2.com",
+    phone: "+7 (999) 765-4321",
+    city: "Санкт-Петербург",
+    street: "Невский проспект",
+    building: "20",
+    postalCode: "198000",
+    services: ["Хирургия", "Терапия", "Вакцинация", "Стрижка"],
+    logoUrl: "https://example.com/logo2.png",
+    workingHours: ["Пн-Вс: 10:00-20:00"],
+    vets: [vetShortList[1]],
+    password: "password456",
     role: "clinic",
-    logoUrl: "#22c55e",
-    createdAt: "2020-03-15T00:00:00.000Z",
+    createdAt: "2022-12-15T00:00:00.000Z",
     updatedAt: "2023-05-20T00:00:00.000Z",
-    address: "123 Medical Center DriverzJJid, New York, NY 10001",
-    phone: "+4 (255) 523-6577",
-    workingHours: "Mon-Fri: 8:00 AM - 8:00 PM, Sat: 9:00 AM - 5:00 PM",
-    description: "Gulliver Clinic is a state-of-the-art medical facility that provides comprehensive healthcare services to patients of all ages. Our team of experienced doctors and nurses are dedicated to delivering the highest quality care to our patients."
   },
-  {
-    id: "3",
-    name: "Clinic 3",
-    email: "clinic3@clinic.com",
-    password: "clinic345",
-    role: "clinic",
-    logoUrl: "#f97316",
-    createdAt: "2020-02-10T00:00:00.000Z",
-    updatedAt: "2023-06-05T00:00:00.000Z",
-    address: "123 MedicDDDal Center DriverzJJid, NWEew York, NY 10001",
-    phone: "+3 (251) 113-1577",
-    workingHours: "Mon-Fri: 8:00 AM - 8:00 PM, Sat: 9:00 AM - 5:00 PM",
-    description: "Clinic 3 is a state-of-the-art medical facility that provides comprehensive healthcare services to patients of all ages. Our team of experienced doctors and nurses are dedicated to delivering the highest quality care to our patients."
-  },
-  {
-    id: "4",
-    name: "City Medical Center",
-    email: "info@citymedical.com",
-    password: "clinic456",
-    role: "clinic",
-    logoUrl: "#8b5cf6",
-    createdAt: "2021-04-20T00:00:00.000Z",
-    updatedAt: "2023-05-25T00:00:00.000Z",
-    address: "456 Health Avenue, Los Angeles, CA 90001",
-    phone: "+1 (555) 987-6543",
-    workingHours: "Mon-Sun: 24/7",
-    description: "City Medical Center is a state-of-the-art medical facility that provides comprehensive healthcare services to patients of all ages. Our team of experienced doctors and nurses are dedicated to delivering the highest quality care to our patients."
-  }
 ];

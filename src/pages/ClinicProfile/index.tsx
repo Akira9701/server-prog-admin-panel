@@ -19,8 +19,8 @@ import {
   SaveOutlined,
   CloseOutlined,
 } from "@ant-design/icons";
-import { useClinicStore } from "@/store/clinicStore";
-import { clinics } from "../../shared/mocks/clinic.mocks";
+import { useClinicStore, fetchClinicByIdSuccess } from "@/store/clinicStore";
+import { clinicMocks } from "../../shared/mocks/clinic.mocks";
 import { clinicAppointments } from "../../shared/mocks/appointments.mocks";
 import styles from "./styles.module.scss";
 
@@ -28,17 +28,17 @@ const { Title, Text } = Typography;
 
 const ClinicProfile = () => {
   const { id } = useParams<{ id: string }>();
-  const { selectedClinic, fetchClinicByIdSuccess } = useClinicStore();
+  const { selectedClinic } = useClinicStore();
   const [isEditing, setIsEditing] = useState(false);
   const [form] = Form.useForm();
 
   useEffect(() => {
-    const clinic = clinics.find((c) => c.id === id);
+    const clinic = clinicMocks.find((c) => c.id === id);
     if (clinic) {
       fetchClinicByIdSuccess(clinic);
       form.setFieldsValue(clinic);
     }
-  }, [id, form, fetchClinicByIdSuccess]);
+  }, [id, form]);
 
   if (!selectedClinic) {
     return <div>Loading...</div>;
