@@ -1,17 +1,16 @@
 import React, { useState } from "react";
-import TextInput from "@/shared/components/textInput/index";
-import PasswordInput from "@/shared/components/passwordInput/index";
-import Button from "@/shared/components/button/index";
+import TextInput from "@/shared/components/TextInput/index";
+import PasswordInput from "@/shared/components/PasswordInput/index";
+import Button from "@/shared/components/Button/index";
 import styles from "./styles.module.scss";
 import { Link } from "react-router-dom";
 import { clinics } from "@/shared/mocks/clinic.mocks";
 import { doctors } from "@/shared/mocks/doctors.mocks";
-import { loginSuccess } from "@/store/slices/authSlice";
-import { useDispatch } from "react-redux";
+import { useAuthStore } from "@/store/authStore";
 import { useNavigate } from "react-router-dom";
 
 const Auth = () => {
-  const dispatch = useDispatch();
+  const { loginSuccess } = useAuthStore();
   const navigate = useNavigate();
   const [form, setForm] = useState({
     email: "",
@@ -27,7 +26,8 @@ const Auth = () => {
     switch (name) {
       case "email":
         if (!value) return "Введите email";
-        if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(value)) return "Некорректный email";
+        if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(value))
+          return "Некорректный email";
         break;
       case "password":
         if (!value) return "Введите пароль";
@@ -59,22 +59,27 @@ const Auth = () => {
     setErrors((prev) => ({
       ...prev,
       [name]: validateField(name, value),
-      ...(name === "password" && { confirmPassword: validateField("confirmPassword", form.confirmPassword) }),
+      ...(name === "password" && {
+        confirmPassword: validateField("confirmPassword", form.confirmPassword),
+      }),
     }));
   };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     const validationErrors: { [key: string]: string } = {};
-    
-    const touchedFields = Object.keys(form).reduce((acc, field) => ({
-      ...acc,
-      [field]: true
-    }), {});
+
+    const touchedFields = Object.keys(form).reduce(
+      (acc, field) => ({
+        ...acc,
+        [field]: true,
+      }),
+      {}
+    );
     setTouched(touchedFields);
 
     Object.entries(form).forEach(([name, value]) => {
-      if (name === 'email' || name === 'password') {
+      if (name === "email" || name === "password") {
         const error = validateField(name, String(value));
         if (error) {
           validationErrors[name] = error;
@@ -85,22 +90,26 @@ const Auth = () => {
     setErrors(validationErrors);
     if (Object.keys(validationErrors).length === 0) {
       try {
-        const ThisClinics = clinics.find(u => u.email === form.email && u.password === form.password);
-        const ThisDoctor = doctors.find(u => u.email === form.email && u.password === form.password);
+        const ThisClinics = clinics.find(
+          (u) => u.email === form.email && u.password === form.password
+        );
+        const ThisDoctor = doctors.find(
+          (u) => u.email === form.email && u.password === form.password
+        );
         const user = ThisClinics || ThisDoctor;
         if (user) {
-          dispatch(loginSuccess({ user, token: "mock-token" }));
-          navigate('/');
+          loginSuccess(user, "mock-token");
+          navigate("/");
         } else {
           setErrors({
-            email: 'Неверный email или пароль',
-            password: 'Неверный email или пароль'
+            email: "Неверный email или пароль",
+            password: "Неверный email или пароль",
           });
         }
       } catch {
         setErrors({
-          email: 'Произошла ошибка при входе',
-          password: 'Произошла ошибка при входе'
+          email: "Произошла ошибка при входе",
+          password: "Произошла ошибка при входе",
         });
       }
     }
@@ -109,7 +118,7 @@ const Auth = () => {
   return (
     <div className={styles.container}>
       <div className={styles.header}>
-      <div className={styles.logo}>
+        <div className={styles.logo}>
           <img src="/src/shared/assets/logo/Dark.svg" alt="Logo" />
         </div>
         <div className={styles.title}>
@@ -129,7 +138,9 @@ const Auth = () => {
               style={{ marginTop: 6 }}
               error={touched.email && !!errors.email}
             />
-            {touched.email && errors.email && <div className={styles.errorText}>{errors.email}</div>}
+            {touched.email && errors.email && (
+              <div className={styles.errorText}>{errors.email}</div>
+            )}
           </div>
         </div>
         <div className={styles.formGroup}>
@@ -141,16 +152,21 @@ const Auth = () => {
               value={form.password}
               onChange={handleChange}
               onBlur={handleBlur}
-              style={{ marginTop: 6  }}
+              style={{ marginTop: 6 }}
               error={touched.password && !!errors.password}
             />
-            {touched.password && errors.password && <div className={styles.errorText}>{errors.password}</div>}
+            {touched.password && errors.password && (
+              <div className={styles.errorText}>{errors.password}</div>
+            )}
           </div>
         </div>
         <Button type="submit">Войти</Button>
       </form>
       <div className={styles.bottomText}>
-        У вас нет аккаунта? <Link to="/register" className={styles.link}>Зарегистрироваться</Link>
+        У вас нет аккаунта?{" "}
+        <Link to="/register" className={styles.link}>
+          Зарегистрироваться
+        </Link>
       </div>
     </div>
   );

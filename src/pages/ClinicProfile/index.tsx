@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { useSelector, useDispatch } from "react-redux";
 import {
   Row,
   Col,
@@ -12,11 +11,15 @@ import {
   Space,
   Button,
   Form,
-  Input
+  Input,
 } from "antd";
-import { UserOutlined, EditOutlined, SaveOutlined, CloseOutlined } from "@ant-design/icons";
-import { RootState } from "../../store";
-import { fetchClinicByIdSuccess } from "../../store/slices/clinicSlice";
+import {
+  UserOutlined,
+  EditOutlined,
+  SaveOutlined,
+  CloseOutlined,
+} from "@ant-design/icons";
+import { useClinicStore } from "@/store/clinicStore";
 import { clinics } from "../../shared/mocks/clinic.mocks";
 import { clinicAppointments } from "../../shared/mocks/appointments.mocks";
 import styles from "./styles.module.scss";
@@ -25,18 +28,17 @@ const { Title, Text } = Typography;
 
 const ClinicProfile = () => {
   const { id } = useParams<{ id: string }>();
-  const dispatch = useDispatch();
-  const { selectedClinic } = useSelector((state: RootState) => state.clinics);
+  const { selectedClinic, fetchClinicByIdSuccess } = useClinicStore();
   const [isEditing, setIsEditing] = useState(false);
   const [form] = Form.useForm();
 
   useEffect(() => {
     const clinic = clinics.find((c) => c.id === id);
     if (clinic) {
-      dispatch(fetchClinicByIdSuccess(clinic));
+      fetchClinicByIdSuccess(clinic);
       form.setFieldsValue(clinic);
     }
-  }, [dispatch, id, form]);
+  }, [id, form, fetchClinicByIdSuccess]);
 
   if (!selectedClinic) {
     return <div>Loading...</div>;
@@ -88,7 +90,6 @@ const ClinicProfile = () => {
                 ) : (
                   <Title level={3}>{selectedClinic.name}</Title>
                 )}
-            
               </div>
             </Space>
           </Col>
@@ -118,7 +119,11 @@ const ClinicProfile = () => {
           </Col>
         </Row>
 
-        <Row gutter={[24, 24]} className={styles.statsRow} style={{ marginTop: '24px' }}>
+        <Row
+          gutter={[24, 24]}
+          className={styles.statsRow}
+          style={{ marginTop: "24px" }}
+        >
           <Col xs={24} md={8}>
             <Card className={styles.statCard}>
               <Statistic
@@ -185,7 +190,12 @@ const ClinicProfile = () => {
                   <Form.Item
                     name="workingHours"
                     label="Working Hours"
-                    rules={[{ required: true, message: "Please input working hours!" }]}
+                    rules={[
+                      {
+                        required: true,
+                        message: "Please input working hours!",
+                      },
+                    ]}
                     className={styles.formItem}
                   >
                     <Input className={styles.input} />
@@ -195,7 +205,9 @@ const ClinicProfile = () => {
                   <Form.Item
                     name="address"
                     label="Address"
-                    rules={[{ required: true, message: "Please input address!" }]}
+                    rules={[
+                      { required: true, message: "Please input address!" },
+                    ]}
                     className={styles.formItem}
                   >
                     <Input className={styles.input} />
@@ -208,7 +220,10 @@ const ClinicProfile = () => {
 
         <Row gutter={[24, 24]} className={styles.contentRow}>
           <Col span={24}>
-            <Card title="Recent Appointments" className={styles.appointmentCard}>
+            <Card
+              title="Recent Appointments"
+              className={styles.appointmentCard}
+            >
               <List
                 itemLayout="horizontal"
                 dataSource={clinicAppointments.slice(0, 5)}

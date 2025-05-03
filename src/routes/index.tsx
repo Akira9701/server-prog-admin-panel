@@ -8,21 +8,27 @@ import Auth from "@/pages/Auth";
 import DoctorProfile from "../pages/DoctorProfile";
 import ClinicProfile from "../pages/ClinicProfile";
 import Login from "../pages/Login";
+import {
+  LOGIN_ROUTE,
+  REGISTER_ROUTE,
+  AUTH_ROUTE,
+} from "@/shared/constants/auth.constants";
+import { APP_ROUTES } from "@/shared/constants/routes.constants";
 // Import dummy page components for navigation examples
 
 const router = createBrowserRouter([
   {
-    path: "/register",
+    path: REGISTER_ROUTE,
     element: <Register />,
     errorElement: <ErrorPage />,
   },
   {
-    path: "/auth",
+    path: AUTH_ROUTE,
     element: <Auth />,
     errorElement: <ErrorPage />,
   },
   {
-    path: "/",
+    path: APP_ROUTES.HOME,
     element: <Root />,
     errorElement: <ErrorPage />,
     children: [
@@ -31,21 +37,21 @@ const router = createBrowserRouter([
         element: <Home />,
       },
       {
-        path: "/doctors",
+        path: APP_ROUTES.DOCTORS,
         element: <Doctors />,
       },
       {
-        path: "profileDoctor/:id",
+        path: APP_ROUTES.PROFILE_DOCTOR,
         element: <DoctorProfile />,
       },
       {
-        path: "profileClinic/:id",
+        path: APP_ROUTES.PROFILE_CLINIC,
         element: <ClinicProfile />,
       },
     ],
   },
   {
-    path: "/login",
+    path: LOGIN_ROUTE,
     element: <Login />,
   },
 ]);

@@ -1,17 +1,16 @@
 import { FC } from "react";
-import { useSelector } from "react-redux";
 import { Table, Button, Avatar, Typography } from "antd";
 import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
 import { Link } from "react-router-dom";
-import { RootState } from "../../../store";
+import { useDoctorStore } from "../../../store/doctorStore";
 import { Doctor } from "../../../types/user.types";
 import styles from "./styles.module.scss";
 
 const { Title, Text } = Typography;
 
 export const DoctorsWidget: FC = () => {
-  // Get doctors from Redux store
-  const { doctors } = useSelector((state: RootState) => state.doctors);
+  // Get doctors from Zustand store
+  const { doctors } = useDoctorStore();
 
   // Only display first 5 doctors for the widget
   const displayedDoctors = doctors.slice(0, 5);

@@ -1,11 +1,10 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
 import { Form, Input, Button, Typography, Card, Divider, message } from "antd";
 import { UserOutlined, LockOutlined } from "@ant-design/icons";
-import { loginSuccess } from "../../store/slices/authSlice";
-import { LoginCredentials } from "../../types/user.types";
+import { useAuthStore } from "@/store/authStore";
 import { doctors } from "../../shared/mocks/doctors.mocks";
+import { REGISTER_ROUTE } from "@/shared/constants/auth.constants";
 import styles from "./styles.module.scss";
 
 const { Title, Text } = Typography;
@@ -13,9 +12,9 @@ const { Title, Text } = Typography;
 const Login = () => {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
-  const dispatch = useDispatch();
+  const { loginSuccess } = useAuthStore();
 
-  const onFinish = (_values: LoginCredentials) => {
+  const onFinish = () => {
     setLoading(true);
 
     // Simulate API call with a timeout
@@ -24,7 +23,7 @@ const Login = () => {
       const mockUser = doctors[0];
       const mockToken = "mock-jwt-token";
 
-      dispatch(loginSuccess({ user: mockUser, token: mockToken }));
+      loginSuccess(mockUser, mockToken);
       message.success("Login successful!");
       navigate("/");
       setLoading(false);
@@ -96,7 +95,7 @@ const Login = () => {
           <Button
             className={styles.registerButton}
             size="large"
-            onClick={() => navigate("/register")}
+            onClick={() => navigate(REGISTER_ROUTE)}
           >
             Register
           </Button>

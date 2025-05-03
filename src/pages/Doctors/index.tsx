@@ -1,14 +1,13 @@
-import { useSelector } from "react-redux";
 import { Table, Typography, Avatar, Space, Button } from "antd";
 import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
-import { RootState } from "../../store";
+import { useDoctorStore } from "@/store/doctorStore";
 import { Doctor } from "../../types/user.types";
 import styles from "./doctors.module.scss";
 
 const { Title } = Typography;
 
 const Doctors = () => {
-  const { doctors } = useSelector((state: RootState) => state.doctors);
+  const { doctors } = useDoctorStore();
 
   const columns = [
     {

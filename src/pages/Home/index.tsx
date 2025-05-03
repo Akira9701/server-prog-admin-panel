@@ -1,5 +1,5 @@
 import { Card, Row, Col, Typography, Statistic } from "antd";
-import { DoctorsWidget } from "../../shared/components/doctorsWidget";
+import { DoctorsWidget } from "../../shared/components/DoctorsWidget";
 import styles from "./styles.module.scss";
 
 const { Title } = Typography;

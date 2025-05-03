@@ -11,9 +11,9 @@ import {
   LogoutOutlined,
   DownOutlined,
 } from "@ant-design/icons";
-import { useSelector, useDispatch } from "react-redux";
-import { logoutSuccess } from "../store/slices/authSlice";
-import { RootState } from "../store";
+import { useAuthStore } from "@/store/authStore";
+import { getProfileRoute } from "@/shared/constants/routes.constants";
+import { LOGIN_ROUTE } from "@/shared/constants/auth.constants";
 import styles from "./styles.module.scss";
 
 const { Sider, Content } = Layout;
@@ -22,13 +22,11 @@ const { Text } = Typography;
 export default function Root() {
   const location = useLocation();
   const navigate = useNavigate();
-  const dispatch = useDispatch();
-
-  const currentUser = useSelector((state: RootState) => state.auth.user);
+  const { user, logoutSuccess } = useAuthStore();
 
   const handleLogout = () => {
-    dispatch(logoutSuccess());
-    navigate("/login");
+    logoutSuccess();
+    navigate(LOGIN_ROUTE);
   };
 
   const dropdownItems: MenuProps["items"] = [
@@ -36,7 +34,8 @@ export default function Root() {
       key: "profile",
       icon: <UserOutlined />,
       label: "Profile",
-      onClick: () => navigate(currentUser?.role === 'clinic' ? `/profileClinic/${currentUser?.id}` : `/profileDoctor/${currentUser?.id}`),
+      onClick: () =>
+        navigate(getProfileRoute(user?.role || "doctor", user?.id || "")),
     },
     {
       key: "divider",
@@ -51,11 +50,15 @@ export default function Root() {
   ];
 
   const menuItems = [
-    ...(currentUser?.role === "clinic" ? [{
-      key: "/",
-      icon: <DashboardOutlined />,
-      label: <Link to="/">Dashboard</Link>,
-    }] : []),
+    ...(user?.role === "clinic"
+      ? [
+          {
+            key: "/",
+            icon: <DashboardOutlined />,
+            label: <Link to="/">Dashboard</Link>,
+          },
+        ]
+      : []),
     {
       key: "/appointment",
       icon: <CalendarOutlined />,
@@ -105,10 +108,14 @@ export default function Root() {
 
           <div className={styles.userProfile}>
             <div className={styles.userInfo}>
-              <Text strong>{currentUser?.role === 'doctor' ? `${currentUser?.firstName} ${currentUser?.lastName}` : currentUser?.name}</Text>
+              <Text strong>
+                {user?.role === "doctor"
+                  ? `${user?.firstName} ${user?.lastName}`
+                  : user?.name}
+              </Text>
               <br />
               <Text type="secondary" style={{ fontSize: "12px" }}>
-                {currentUser?.role}
+                {user?.role}
               </Text>
             </div>
             <Dropdown menu={{ items: dropdownItems }} placement="topRight">

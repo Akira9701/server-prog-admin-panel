@@ -1,6 +1,5 @@
 import { useEffect } from "react";
 import { useParams } from "react-router-dom";
-import { useSelector, useDispatch } from "react-redux";
 import {
   Row,
   Col,
@@ -13,8 +12,7 @@ import {
   Progress,
 } from "antd";
 import { CalendarOutlined, UserOutlined, StarFilled } from "@ant-design/icons";
-import { RootState } from "../../store";
-import { fetchDoctorByIdSuccess } from "../../store/slices/doctorSlice";
+import { useDoctorStore } from "@/store/doctorStore";
 import { doctors } from "../../shared/mocks/doctors.mocks";
 import { doctorAppointments } from "../../shared/mocks/appointments.mocks";
 import styles from "./styles.module.scss";
@@ -23,16 +21,15 @@ const { Title, Text } = Typography;
 
 const DoctorProfile = () => {
   const { id } = useParams<{ id: string }>();
-  const dispatch = useDispatch();
-  const { selectedDoctor } = useSelector((state: RootState) => state.doctors);
+  const { selectedDoctor, fetchDoctorByIdSuccess } = useDoctorStore();
 
   useEffect(() => {
     // Find doctor from mock data
     const doctor = doctors.find((doc) => doc.id === id);
     if (doctor) {
-      dispatch(fetchDoctorByIdSuccess(doctor));
+      fetchDoctorByIdSuccess(doctor);
     }
-  }, [dispatch, id]);
+  }, [id, fetchDoctorByIdSuccess]);
 
   if (!selectedDoctor) {
     return <div>Loading...</div>;
@@ -58,7 +55,9 @@ const DoctorProfile = () => {
                 icon={<UserOutlined />}
               />
               <div>
-                <Title level={3}>{selectedDoctor.firstName} {selectedDoctor.lastName}</Title>
+                <Title level={3}>
+                  {selectedDoctor.firstName} {selectedDoctor.lastName}
+                </Title>
                 <Text type="secondary">{selectedDoctor.specialization}</Text>
               </div>
             </Space>
